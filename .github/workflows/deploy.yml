@@ -1,0 +1,14 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-actions.json
+name: Deploy Complex
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: action/checkout@v3
+      - run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
