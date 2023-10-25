@@ -13,7 +13,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Login docker
-        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
 
       - name: Build test images
         run: docker build -t trungnd3/multi-client-test -f ./client/Dockerfile.dev ./client
@@ -23,14 +23,14 @@ jobs:
 
       - name: Build multiple project images
         run: |
-          docker build -t trungnd3/multi-client ./client
-          docker build -t trungnd3/multi-nginx ./nginx
-          docker build -t trungnd3/multi-server ./server
-          docker build -t trungnd3/multi-worker ./worker
+          docker build -t trunglinh53/multi-client ./client
+          docker build -t trunglinh53/multi-nginx ./nginx
+          docker build -t trunglinh53/multi-server ./server
+          docker build -t trunglinh53/multi-worker ./worker
 
       - name: Push images to docker hub
         run: |
-          docker push trungnd3/multi-client
-          docker push trungnd3/multi-nginx
-          docker push trungnd3/multi-server
-          docker push trungnd3/multi-worker
+          docker push trunglinh53/multi-client
+          docker push trunglinh53/multi-nginx
+          docker push trunglinh53/multi-server
+          docker push trunglinh53/multi-worker
