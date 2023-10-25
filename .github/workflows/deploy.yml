@@ -11,6 +11,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-      - run: docker build -t trungnd3/complex-client-test -f ./client/Dockerfile.dev ./client
-      - run: docker run -e CI=true trungnd3/complex-client-test npm run test
+
+      - name: Login docker
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build test images
+        run: docker build -t trungnd3/multi-client-test -f ./client/Dockerfile.dev ./client
+
+      - name: Run tests
+        run: docker run -e CI=true trungnd3/multi-client-test npm run test
+
+      - name: Build multiple project images
+        run: |
+          docker build -t trungnd3/multi-client ./client
+          docker build -t trungnd3/multi-nginx ./nginx
+          docker build -t trungnd3/multi-server ./server
+          docker build -t trungnd3/multi-worker ./worker
+
+      - name: Push images to docker hub
+        run: |
+          docker push trungnd3/multi-client
+          docker push trungnd3/multi-nginx
+          docker push trungnd3/multi-server
+          docker push trungnd3/multi-worker
